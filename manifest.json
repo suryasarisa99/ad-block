@@ -1,0 +1,19 @@
+{
+  "name": "AddBlocker",
+  "description": "Someting unknown",
+  "manifest_version": 3,
+  "version": "0.0.1",
+  "host_permissions": [
+    "https://www.example.com/*",
+    "https://pass-backend.vercel.app/*"
+  ],
+
+  "icons": {},
+  "permissions": ["storage", "activeTab", "webNavigation", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}
