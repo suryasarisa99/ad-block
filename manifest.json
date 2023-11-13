@@ -8,11 +8,18 @@
     "https://pass-backend.vercel.app/*"
   ],
 
-  "icons": {},
+  "icons": {
+    "16": "./pngwing.com.png",
+    "24": "./pngwing.com.png",
+    "32": "./pngwing.com.png"
+  },
   "permissions": ["storage", "activeTab", "webNavigation", "scripting"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "https://accounts.google.com/*/signin/*",
+        "http://103.138.0.69/ecap/*"
+      ],
       "js": ["contentScript.js"]
     }
   ]
